@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ivaniv/Рабочий стол/Курсовая/ODE_PACK/source.cpp
+fstream
+-
+iostream
+-
+vector
+-
+cmath
+-
+

@@ -1,0 +1,3 @@
+/home/ivaniv/Рабочий стол/Курсовая/ODE_PACK/build/CMakeFiles/rebuild_cache.dir
+/home/ivaniv/Рабочий стол/Курсовая/ODE_PACK/build/CMakeFiles/ODE.dir
+/home/ivaniv/Рабочий стол/Курсовая/ODE_PACK/build/CMakeFiles/edit_cache.dir
