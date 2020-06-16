@@ -63,11 +63,11 @@ END SUBROUTINE
 SUBROUTINE JEX (NEQ, T, Y, ML, MU, PD, NRPD, RPAR, IPAR)
     INTEGER M, IPAR, cnum, i, n
      DOUBLE PRECISION PD, RPAR, T, Y, K, v1, v2, W
-     DIMENSION Y(NEQ), PD(NRPD,NEQ), IPAR(1), RPAR(NEQ * IPAR(1)), v1(NEQ), v2(NEQ)
+     DIMENSION Y(NEQ), PD(NEQ, NRPD), IPAR(1), RPAR(NEQ * IPAR(1)), v1(NEQ), v2(NEQ)
      M = 2 * NEQ + 1
      DO cnum = 1, NEQ
         DO i = 1, NRPD
-            PD(i, cnum) = 0
+            PD(cnum, i) = 0
         ENDDO
         DO n = 1, IPAR(1)
             v1 = RPAR((n - 1) * M + 1 : NEQ + (n - 1) * M)
@@ -77,7 +77,7 @@ SUBROUTINE JEX (NEQ, T, Y, ML, MU, PD, NRPD, RPAR, IPAR)
             DO i = 1, NEQ
                 W = W * Y(i)**v1(i)
             ENDDO
-            PD(1, cnum) = PD(1, cnum) + (v2(cnum + (n - 1) * M + NEQ + 1) - v1(cnum + (n - 1) * M)) * W
+            PD(cnum, i) = PD(cnum, i) + (v2(cnum + (n - 1) * M + NEQ + 1) - v1(cnum + (n - 1) * M)) * W
         ENDDO
      ENDDO
      RETURN

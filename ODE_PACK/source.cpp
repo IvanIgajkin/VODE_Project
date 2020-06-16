@@ -33,14 +33,18 @@ int main()
     //флаг следит за тем, что мы доходим до конца строки
     bool flag = false;
     vector<double> temp;
-    while (i <3)
+    while (!fin.eof())
     {
-        while (temp.size() < 9)
+        while ((fin.peek() != '\n' && !fin.eof()) || flag)
         {
             double coeff;
-            cin >> coeff;
+            fin >> coeff;
             temp.push_back(coeff);
+            if (fin.peek() != '\n') flag = false;
         }
+
+        //сейчас указатель в файле стоит на конце строки, поэтому для дальнейшего чтения в цикле выше нужно отметить, что сейчас начинается запись новой строки
+        flag = true;
 
         //проверка, что не было ошибок в вводе
         if (fix_size < 0) fix_size = temp.size();
