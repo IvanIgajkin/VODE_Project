@@ -4,7 +4,7 @@ SUBROUTINE DSOLVE(NEQ, RPAR, IPAR, Y, T, TSTEP)
     DOUBLE PRECISION ATOL, RPAR, RTOL, RWORK, T, TOUT, Y, TSTEP
     DIMENSION IPAR(1), Y(NEQ), ATOL(4), RWORK(90), IWORK(34), RPAR(IPAR(1) * (2 * NEQ + 1))
     TOUT = TSTEP
-    NRPD = 1
+    NRPD = 4
     ITOL = 2
     RTOL = 1.D-4
     ATOL(1) = 1.D-8
@@ -41,7 +41,7 @@ SUBROUTINE FEX (NEQ, T, Y, YDOT, RPAR, IPAR)
      DOUBLE PRECISION K, v1, v2, W
      INTEGER cnum, n, i
      DIMENSION IPAR(1)
-     DIMENSION Y(NEQ), YDOT(NEQ), RPAR(NEQ * IPAR(1))
+     DIMENSION Y(NEQ), YDOT(NEQ), RPAR((2 * NEQ + 1) * IPAR(1))
      DIMENSION v1(NEQ), v2(NEQ)
      M = 2 * NEQ + 1
      DO cnum = 1, NEQ
@@ -49,10 +49,10 @@ SUBROUTINE FEX (NEQ, T, Y, YDOT, RPAR, IPAR)
         DO n = 1, IPAR(1)
             v1 = RPAR((n - 1) * M + 1 : NEQ + (n - 1) * M)
             v2 = RPAR(NEQ + (n - 1) * M + 1 : n * M - 1)
-            K = RPAR(M * (n - 1))
+            K = RPAR(M * n)
             W = K
             DO i = 1, NEQ
-                W = W * Y(i)**v1(i)
+                IF (Y(i) > 0 .OR. v1(i) == 1) W = W * Y(i)**v1(i)
             ENDDO
             YDOT(cnum) = YDOT(cnum) + (v2(cnum + (n - 1) * M + NEQ + 1) - v1(cnum + (n - 1) * M)) * W
         ENDDO
@@ -63,7 +63,7 @@ END SUBROUTINE
 SUBROUTINE JEX (NEQ, T, Y, ML, MU, PD, NRPD, RPAR, IPAR)
     INTEGER M, IPAR, cnum, i, n
      DOUBLE PRECISION PD, RPAR, T, Y, K, v1, v2, W
-     DIMENSION Y(NEQ), PD(NEQ, NRPD), IPAR(1), RPAR(NEQ * IPAR(1)), v1(NEQ), v2(NEQ)
+     DIMENSION Y(NEQ), PD(NEQ, NRPD), IPAR(1), RPAR((2 * NEQ + 1) * IPAR(1)), v1(NEQ), v2(NEQ)
      M = 2 * NEQ + 1
      DO cnum = 1, NEQ
         DO i = 1, NRPD
@@ -75,9 +75,10 @@ SUBROUTINE JEX (NEQ, T, Y, ML, MU, PD, NRPD, RPAR, IPAR)
             K = RPAR(M * (n - 1))
             W = K
             DO i = 1, NEQ
-                W = W * Y(i)**v1(i)
+                IF (Y(i) > 0 .OR. v1(i) == 1) W = W * Y(i)**v1(i)
             ENDDO
-            PD(cnum, i) = PD(cnum, i) + (v2(cnum + (n - 1) * M + NEQ + 1) - v1(cnum + (n - 1) * M)) * W
+            PD(cnum, 1) = PD(cnum, 1) + (v2(cnum + (n - 1) * M + NEQ + 1) - v1(cnum + (n - 1) * M)) * W
+            PRINT *, (PD(i, 1), i = 1, NEQ)
         ENDDO
      ENDDO
      RETURN
